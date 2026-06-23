@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @font-face { font-family:"Safiro"; src:url("fonts/Safiro-Regular.otf") format("opentype"); font-weight:400; }
+    @font-face { font-family:"Safiro"; src:url("fonts/Safiro-Medium.otf") format("opentype"); font-weight:500; }
+    @font-face { font-family:"Safiro"; src:url("fonts/Safiro-SemiBold.otf") format("opentype"); font-weight:600; }
+    @font-face { font-family:"Safiro"; src:url("fonts/Safiro-Bold.otf") format("opentype"); font-weight:700; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:"Safiro",ui-sans-serif,sans-serif;background:#f2f2f2;color:#111722;-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;}
+    input,textarea,select,button{font-family:inherit;}
+    a{text-decoration:none;}
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:#dde1e7;border-radius:99px;}
+    .toggle{position:relative;width:40px;height:22px;flex-shrink:0;cursor:pointer;}
+    .toggle input{opacity:0;width:0;height:0;position:absolute;}
+    .toggle-track{position:absolute;inset:0;background:#dde1e7;border-radius:99px;transition:background .2s;}
+    .toggle input:checked+.toggle-track{background:#c81516;}
+    .toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.18);}
+    .toggle input:checked~.toggle-thumb{transform:translateX(18px);}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .btn-primary{background:#c81516;color:#fff;} .btn-primary:hover{background:#961011;}
+    .btn-ghost{background:transparent;color:#4a5360;border:1px solid #dde1e7;} .btn-ghost:hover{background:#fff;}
+    .btn-danger{background:transparent;color:#c81516;border:1px solid rgba(200,21,22,.25);} .btn-danger:hover{background:rgba(200,21,22,.06);}
+    .badge{display:inline-block;padding:3px 9px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:1px;}
+    .badge-featured{background:rgba(200,21,22,.1);color:#c81516;}
+    .badge-draft{background:#f2f2f2;color:#7a8392;}
+    .field-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;display:block;margin-bottom:7px;}
+    .field-input{width:100%;padding:10px 13px;border:1px solid #dde1e7;border-radius:2px;font-size:13px;color:#111722;background:#fff;outline:none;transition:border-color .2s;}
+    .field-input:focus{border-color:#c81516;}
+    .field-textarea{resize:vertical;min-height:90px;}
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+    .modal{background:#fff;width:560px;max-height:80vh;overflow-y:auto;border-radius:3px;box-shadow:0 24px 80px rgba(0,0,0,.18);}
+    .modal-header{padding:24px 28px 20px;border-bottom:1px solid #eef0f3;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;}
+    .modal-body{padding:24px 28px;}
+    .modal-footer{padding:16px 28px 24px;display:flex;gap:10px;justify-content:flex-end;}
+    .tab{padding:8px 0;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#7a8392;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+    .tab.active{color:#000e26;border-bottom-color:#c81516;}
+    .row-item{display:grid;align-items:center;padding:14px 20px;background:#fff;border-bottom:1px solid #eef0f3;transition:background .15s;}
+    .row-item:hover{background:#fafafa;}
+    .row-item:last-child{border-bottom:none;}
+    .sidebar-link{display:flex;align-items:center;gap:12px;padding:10px 20px;font-size:12px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:all .18s;border-left:2px solid transparent;}
+    .sidebar-link:hover{color:#fff;background:rgba(255,255,255,.06);}
+    .sidebar-link.active{color:#fff;background:rgba(200,21,22,.15);border-left-color:#c81516;}
+  </style>
+</helmet>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="position:fixed;inset:0;z-index:999;background:#000e26;display:flex;align-items:center;justify-content:center;">
+  <div style="width:380px;">
+    <img src="assets/logo-primary-white.png" alt="ALSUWEIDI" style="height:24px;width:auto;margin-bottom:40px;">
+    <p style="font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px;">Admin Panel</p>
+    <h2 style="font-size:26px;font-weight:500;color:#fff;margin-bottom:32px;letter-spacing:-.01em;">Sign in to manage content</h2>
+    <div style="margin-bottom:16px;">
+      <label class="field-label" style="color:rgba(255,255,255,.4);">Password</label>
+      <input id="login-pwd" type="password" class="field-input" placeholder="Enter admin password" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);color:#fff;" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <p id="login-err" style="font-size:12px;color:#e85758;margin-bottom:14px;display:none;">Incorrect password. Try: admin</p>
+    <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;padding:13px;">Sign In →</button>
+    <p style="font-size:11px;color:rgba(255,255,255,.25);margin-top:20px;text-align:center;">Demo password: <strong style="color:rgba(255,255,255,.5);">admin</strong></p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none;height:100vh;display:none;flex-direction:column;">
+
+  <!-- TOP BAR -->
+  <div style="height:52px;background:#000e26;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;z-index:10;border-bottom:1px solid rgba(255,255,255,.07);">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="assets/logo-primary-white.png" alt="ALSUWEIDI" style="height:20px;width:auto;">
+      <span style="width:1px;height:16px;background:rgba(255,255,255,.15);display:block;"></span>
+      <span style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);">Content Manager</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <a href="Homepage.dc.html" target="_blank" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.45);letter-spacing:.06em;transition:color .2s;">View Site ↗</a>
+      <button onclick="doLogout()" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.35);background:none;border:none;cursor:pointer;letter-spacing:.06em;">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div style="flex:1;display:flex;overflow:hidden;">
+
+    <!-- SIDEBAR -->
+    <div style="width:200px;background:#000e26;flex-shrink:0;padding:24px 0;display:flex;flex-direction:column;gap:2px;overflow-y:auto;">
+      <p style="font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 20px 10px;">Content</p>
+      <div class="sidebar-link active" id="nav-news" onclick="showSection('news')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>
+        News &amp; Insights
+      </div>
+      <div class="sidebar-link" id="nav-projects" onclick="showSection('projects')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Projects
+      </div>
+      <div class="sidebar-link" id="nav-team" onclick="showSection('team')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Team
+      </div>
+      <div class="sidebar-link" id="nav-settings" onclick="showSection('settings')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 19.07l1.41-1.41M20 12h-2M4 12H2M19.07 19.07l-1.41-1.41M4.93 4.93l1.41 1.41M12 20v-2M12 4V2"/></svg>
+        Site Settings
+      </div>
+
+      <!-- HOMEPAGE STATUS -->
+      <div style="margin-top:auto;padding:16px 14px 0;">
+        <div style="background:rgba(255,255,255,.05);border-radius:3px;padding:14px;">
+          <p style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;">Homepage shows</p>
+          <p id="hp-summary-news" style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:4px;">— news featured</p>
+          <p id="hp-summary-proj" style="font-size:11px;color:rgba(255,255,255,.55);">— projects featured</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div style="flex:1;overflow-y:auto;background:#f2f2f2;">
+
+      <!-- NEWS SECTION -->
+      <div id="section-news" style="padding:32px 36px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:600;color:#000e26;margin-bottom:4px;">News &amp; Insights</h1>
+            <p style="font-size:13px;color:#7a8392;">Toggle <strong>Featured</strong> to control what appears on the homepage. Max 3 featured.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('news')">+ Add Story</button>
+        </div>
+        <div style="background:#fff;border:1px solid #eef0f3;border-radius:3px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:1fr 130px 100px 80px 90px;padding:10px 20px;background:#f8f8f8;border-bottom:1px solid #eef0f3;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Title</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Category</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Date</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Featured</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Actions</span>
+          </div>
+          <div id="news-list"></div>
+        </div>
+      </div>
+
+      <!-- PROJECTS SECTION -->
+      <div id="section-projects" style="padding:32px 36px;display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:600;color:#000e26;margin-bottom:4px;">Projects</h1>
+            <p style="font-size:13px;color:#7a8392;">Toggle <strong>Featured</strong> to select which projects appear on the homepage. Max 6 featured.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('project')">+ Add Project</button>
+        </div>
+        <div style="background:#fff;border:1px solid #eef0f3;border-radius:3px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:1fr 130px 100px 80px 90px;padding:10px 20px;background:#f8f8f8;border-bottom:1px solid #eef0f3;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Project Name</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Sector</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Location</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Featured</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Actions</span>
+          </div>
+          <div id="projects-list"></div>
+        </div>
+      </div>
+
+      <!-- TEAM SECTION -->
+      <div id="section-team" style="padding:32px 36px;display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:600;color:#000e26;margin-bottom:4px;">Team</h1>
+            <p style="font-size:13px;color:#7a8392;">Manage leadership and team members shown on the About page.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('team')">+ Add Member</button>
+        </div>
+        <div style="background:#fff;border:1px solid #eef0f3;border-radius:3px;overflow:hidden;">
+          <div style="display:grid;grid-template-columns:1fr 200px 90px;padding:10px 20px;background:#f8f8f8;border-bottom:1px solid #eef0f3;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Name</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Title</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a8392;">Actions</span>
+          </div>
+          <div id="team-list"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS SECTION -->
+      <div id="section-settings" style="padding:32px 36px;display:none;">
+        <h1 style="font-size:22px;font-weight:600;color:#000e26;margin-bottom:4px;">Site Settings</h1>
+        <p style="font-size:13px;color:#7a8392;margin-bottom:28px;">Global site information shown in the footer and contact page.</p>
+        <div style="background:#fff;border:1px solid #eef0f3;border-radius:3px;padding:28px;display:flex;flex-direction:column;gap:20px;max-width:560px;">
+          <div><label class="field-label">Phone</label><input class="field-input" id="s-phone" placeholder="+971 2 444 0000"></div>
+          <div><label class="field-label">Email</label><input class="field-input" id="s-email" placeholder="info@alsuweidi.ae"></div>
+          <div><label class="field-label">Office Address</label><input class="field-input" id="s-address" placeholder="Khalidiyah, Abu Dhabi, UAE"></div>
+          <div><label class="field-label">Homepage hero headline</label><input class="field-input" id="s-headline" placeholder="Old and new. Locally rooted, globally capable."></div>
+          <div><label class="field-label">Homepage hero subtext</label><textarea class="field-input field-textarea" id="s-subtext" placeholder="Since 1988..."></textarea></div>
+          <button class="btn btn-primary" onclick="saveSettings()" style="align-self:flex-start;">Save Settings</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-bg" style="display:none;" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title" style="font-size:16px;font-weight:600;color:#000e26;"></h3>
+      <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#7a8392;line-height:1;">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-save" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:28px;right:28px;background:#000e26;color:#fff;padding:12px 20px;border-radius:3px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;border-left:3px solid #c81516;"></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    // Check session
+    if (sessionStorage.getItem('als-admin-auth')) this._showApp();
+
+    // Wire globals
+    window.doLogin = () => {
+      const pwd = document.getElementById('login-pwd').value;
+      const err = document.getElementById('login-err');
+      if (pwd === 'admin') {
+        sessionStorage.setItem('als-admin-auth', '1');
+        this._showApp();
+      } else {
+        err.style.display = 'block';
+      }
+    };
+    window.doLogout = () => {
+      sessionStorage.removeItem('als-admin-auth');
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    };
+    window.showSection = (sec) => {
+      ['news','projects','team','settings'].forEach(s => {
+        document.getElementById('section-'+s).style.display = s===sec ? 'block' : 'none';
+        document.getElementById('nav-'+s).classList.toggle('active', s===sec);
+      });
+    };
+    window.openModal = (type, id) => { this._openModal(type, id); };
+    window.closeModal = () => { document.getElementById('modal').style.display = 'none'; };
+    window.saveModal = () => { this._saveModal(); };
+    window.toggleFeatured = (type, id) => { this._toggleFeatured(type, id); };
+    window.deleteItem = (type, id) => { this._deleteItem(type, id); };
+    window.editItem = (type, id) => { this._openModal(type, id); };
+    window.saveSettings = () => { this._saveSettings(); };
+  }
+
+  _showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    const app = document.getElementById('app');
+    app.style.display = 'flex';
+    this._initData();
+    this._renderAll();
+  }
+
+  _initData() {
+    const defaults = {
+      news: [
+        { id:1, title:'ALSUWEIDI Unveils New Identity — Engineering Integrity, Freshly Expressed', category:'Brand Relaunch', date:'June 2026', body:'After 38 years, we mark a new era with a refreshed visual identity.', featured:true },
+        { id:2, title:'Ranked #215 — ENR Top International Design Firms 2024', category:'Recognition', date:'April 2024', body:'ALSUWEIDI earns a top-250 ranking for the second consecutive year.', featured:true },
+        { id:3, title:"UAE's Best Multidisciplinary Engineering Firm, 2025", category:'Award', date:'Feb 2025', body:'Recognised for excellence in integrated engineering delivery.', featured:true },
+        { id:4, title:'ADNOC Data Centre Reaches Practical Completion', category:'Project', date:'Dec 2023', body:'Mission-critical facility delivered on programme and specification.', featured:false },
+        { id:5, title:'ALSUWEIDI Achieves LEED Gold on Three Projects in 2024', category:'Sustainability', date:'Nov 2024', body:'Demonstrating commitment to sustainable engineering practice.', featured:false },
+        { id:6, title:'1,100+ Training Hours: Investing in UAE Engineers', category:'People', date:'Oct 2025', body:'Our 2025 training programme sets a new benchmark.', featured:false },
+      ],
+      projects: [
+        { id:1, name:'Al Maryah Island Office Tower', sector:'Commercial', location:'Abu Dhabi', year:'2024', featured:true },
+        { id:2, name:'Al Reem Island Community Phase III', sector:'Residential', location:'Abu Dhabi', year:'2023', featured:true },
+        { id:3, name:'MODON Industrial Hub Phase II', sector:'Industrial', location:'Abu Dhabi', year:'2024', featured:true },
+        { id:4, name:'Grand Hyatt Al Khaznah', sector:'Hospitality', location:'Al Ain', year:'2023', featured:true },
+        { id:5, name:'Sorbonne University Abu Dhabi', sector:'Education', location:'Abu Dhabi', year:'2021', featured:true },
+        { id:6, name:'Masdar City Infrastructure', sector:'Infrastructure', location:'Abu Dhabi', year:'2022', featured:true },
+        { id:7, name:'Sheikh Khalifa Medical City Expansion', sector:'Healthcare', location:'Abu Dhabi', year:'2023', featured:false },
+        { id:8, name:'ADNOC Integrated Data Centre', sector:'Data Centre', location:'Abu Dhabi', year:'2023', featured:false },
+        { id:9, name:'Yas Island Residential Towers', sector:'Residential', location:'Abu Dhabi', year:'2024', featured:false },
+      ],
+      team: [
+        { id:1, name:'Mohammed Al Suweidi', role:'Founder & Chairman', bio:'Co-founded ALSUWEIDI in 1988.' },
+        { id:2, name:'Ahmad Al Suweidi', role:'Co-Founder & CEO', bio:'Leads strategy and operations.' },
+        { id:3, name:'Sara Al Mansoori', role:'Technical Director', bio:'Leads the technical delivery team.' },
+        { id:4, name:'Khalid Al Rashidi', role:'Operations Director', bio:'Oversees project delivery.' },
+      ],
+      settings: { phone:'+971 2 444 0000', email:'info@alsuweidi.ae', address:'Khalidiyah, Abu Dhabi, UAE', headline:'Old and new. Locally rooted, globally capable.', subtext:'Since 1988, ALSUWEIDI has engineered the UAE\'s skyline, infrastructure, and communities.' }
+    };
+    if (!localStorage.getItem('als-cms')) {
+      localStorage.setItem('als-cms', JSON.stringify(defaults));
+    }
+  }
+
+  _getData() { return JSON.parse(localStorage.getItem('als-cms')); }
+  _saveData(d) { localStorage.setItem('als-cms', JSON.stringify(d)); }
+
+  _renderAll() {
+    const d = this._getData();
+    this._renderNews(d.news);
+    this._renderProjects(d.projects);
+    this._renderTeam(d.team);
+    this._updateSidebar(d);
+    // Settings
+    const s = d.settings || {};
+    ['phone','email','address','headline','subtext'].forEach(k => {
+      const el = document.getElementById('s-'+k);
+      if (el) el.value = s[k] || '';
+    });
+  }
+
+  _renderNews(items) {
+    const el = document.getElementById('news-list');
+    if (!el) return;
+    el.innerHTML = items.map(n => `
+      <div class="row-item" style="grid-template-columns:1fr 130px 100px 80px 90px;">
+        <div>
+          <p style="font-size:13px;font-weight:500;color:#000e26;margin-bottom:3px;">${n.title}</p>
+          ${n.featured ? '<span class="badge badge-featured">On Homepage</span>' : '<span class="badge badge-draft">Hidden</span>'}
+        </div>
+        <span style="font-size:12px;color:#7a8392;">${n.category}</span>
+        <span style="font-size:12px;color:#7a8392;">${n.date}</span>
+        <label class="toggle" title="${n.featured?'Remove from homepage':'Add to homepage'}">
+          <input type="checkbox" ${n.featured?'checked':''} onchange="toggleFeatured('news',${n.id})">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost" style="padding:5px 10px;font-size:10px;" onclick="editItem('news',${n.id})">Edit</button>
+          <button class="btn btn-danger" style="padding:5px 10px;font-size:10px;" onclick="deleteItem('news',${n.id})">Del</button>
+        </div>
+      </div>`).join('');
+  }
+
+  _renderProjects(items) {
+    const el = document.getElementById('projects-list');
+    if (!el) return;
+    el.innerHTML = items.map(p => `
+      <div class="row-item" style="grid-template-columns:1fr 130px 100px 80px 90px;">
+        <div>
+          <p style="font-size:13px;font-weight:500;color:#000e26;margin-bottom:3px;">${p.name}</p>
+          ${p.featured ? '<span class="badge badge-featured">On Homepage</span>' : '<span class="badge badge-draft">Hidden</span>'}
+        </div>
+        <span style="font-size:12px;color:#7a8392;">${p.sector}</span>
+        <span style="font-size:12px;color:#7a8392;">${p.location}</span>
+        <label class="toggle">
+          <input type="checkbox" ${p.featured?'checked':''} onchange="toggleFeatured('projects',${p.id})">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost" style="padding:5px 10px;font-size:10px;" onclick="editItem('project',${p.id})">Edit</button>
+          <button class="btn btn-danger" style="padding:5px 10px;font-size:10px;" onclick="deleteItem('projects',${p.id})">Del</button>
+        </div>
+      </div>`).join('');
+  }
+
+  _renderTeam(items) {
+    const el = document.getElementById('team-list');
+    if (!el) return;
+    el.innerHTML = items.map(t => `
+      <div class="row-item" style="grid-template-columns:1fr 200px 90px;">
+        <p style="font-size:13px;font-weight:500;color:#000e26;">${t.name}</p>
+        <span style="font-size:12px;color:#7a8392;">${t.role}</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost" style="padding:5px 10px;font-size:10px;" onclick="editItem('team',${t.id})">Edit</button>
+          <button class="btn btn-danger" style="padding:5px 10px;font-size:10px;" onclick="deleteItem('team',${t.id})">Del</button>
+        </div>
+      </div>`).join('');
+  }
+
+  _updateSidebar(d) {
+    const fn = d.news.filter(n=>n.featured).length;
+    const fp = d.projects.filter(p=>p.featured).length;
+    const sn = document.getElementById('hp-summary-news');
+    const sp = document.getElementById('hp-summary-proj');
+    if (sn) sn.textContent = fn + ' news featured';
+    if (sp) sp.textContent = fp + ' projects featured';
+  }
+
+  _toggleFeatured(type, id) {
+    const d = this._getData();
+    const arr = type === 'news' ? d.news : d.projects;
+    const maxF = type === 'news' ? 3 : 6;
+    const item = arr.find(x=>x.id===id);
+    if (!item) return;
+    const currentFeatured = arr.filter(x=>x.featured).length;
+    if (!item.featured && currentFeatured >= maxF) {
+      this._toast('Max ' + maxF + ' featured ' + type + '. Unfeature one first.');
+      this._renderAll();
+      return;
+    }
+    item.featured = !item.featured;
+    this._saveData(d);
+    this._renderAll();
+    this._toast(item.featured ? 'Added to homepage ✓' : 'Removed from homepage');
+  }
+
+  _deleteItem(type, id) {
+    if (!confirm('Delete this item?')) return;
+    const d = this._getData();
+    d[type] = d[type].filter(x=>x.id!==id);
+    this._saveData(d);
+    this._renderAll();
+    this._toast('Deleted.');
+  }
+
+  _modalType = null; _modalId = null;
+
+  _openModal(type, id) {
+    this._modalType = type; this._modalId = id || null;
+    const d = this._getData();
+    let item = null;
+    const isEdit = !!id;
+
+    if (type==='news') {
+      item = isEdit ? d.news.find(x=>x.id===id) : {};
+      document.getElementById('modal-title').textContent = isEdit ? 'Edit News Story' : 'Add News Story';
+      document.getElementById('modal-body').innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div><label class="field-label">Headline</label><input class="field-input" id="m-title" value="${item.title||''}"></div>
+          <div><label class="field-label">Category</label><input class="field-input" id="m-category" value="${item.category||''}" placeholder="e.g. Award, Project, Recognition"></div>
+          <div><label class="field-label">Date</label><input class="field-input" id="m-date" value="${item.date||''}" placeholder="e.g. June 2026"></div>
+          <div><label class="field-label">Summary (shown on cards)</label><textarea class="field-input field-textarea" id="m-body">${item.body||''}</textarea></div>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <label class="toggle"><input type="checkbox" id="m-featured" ${item.featured?'checked':''}><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            <span style="font-size:13px;color:#000e26;">Show on homepage</span>
+          </label>
+        </div>`;
+    } else if (type==='project') {
+      item = isEdit ? d.projects.find(x=>x.id===id) : {};
+      document.getElementById('modal-title').textContent = isEdit ? 'Edit Project' : 'Add Project';
+      document.getElementById('modal-body').innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div><label class="field-label">Project Name</label><input class="field-input" id="m-name" value="${item.name||''}"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div><label class="field-label">Sector</label><input class="field-input" id="m-sector" value="${item.sector||''}" placeholder="e.g. Commercial, Healthcare"></div>
+            <div><label class="field-label">Location</label><input class="field-input" id="m-location" value="${item.location||''}" placeholder="e.g. Abu Dhabi"></div>
+          </div>
+          <div><label class="field-label">Year</label><input class="field-input" id="m-year" value="${item.year||''}" placeholder="2024"></div>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+            <label class="toggle"><input type="checkbox" id="m-featured" ${item.featured?'checked':''}><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            <span style="font-size:13px;color:#000e26;">Show on homepage</span>
+          </label>
+        </div>`;
+    } else if (type==='team') {
+      item = isEdit ? d.team.find(x=>x.id===id) : {};
+      document.getElementById('modal-title').textContent = isEdit ? 'Edit Team Member' : 'Add Team Member';
+      document.getElementById('modal-body').innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div><label class="field-label">Full Name</label><input class="field-input" id="m-name" value="${item.name||''}"></div>
+          <div><label class="field-label">Title / Role</label><input class="field-input" id="m-role" value="${item.role||''}"></div>
+          <div><label class="field-label">Short Bio</label><textarea class="field-input field-textarea" id="m-bio">${item.bio||''}</textarea></div>
+        </div>`;
+    }
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  _saveModal() {
+    const d = this._getData();
+    const type = this._modalType; const id = this._modalId;
+    const g = sel => { const el=document.getElementById(sel); return el?el.value.trim():''; };
+    const gc = sel => { const el=document.getElementById(sel); return el?el.checked:false; };
+
+    if (type==='news') {
+      const obj = { title:g('m-title'), category:g('m-category'), date:g('m-date'), body:g('m-body'), featured:gc('m-featured') };
+      if (!obj.title) { this._toast('Title is required.'); return; }
+      if (id) { Object.assign(d.news.find(x=>x.id===id), obj); }
+      else { obj.id = Date.now(); d.news.unshift(obj); }
+    } else if (type==='project') {
+      const obj = { name:g('m-name'), sector:g('m-sector'), location:g('m-location'), year:g('m-year'), featured:gc('m-featured') };
+      if (!obj.name) { this._toast('Name is required.'); return; }
+      if (id) { Object.assign(d.projects.find(x=>x.id===id), obj); }
+      else { obj.id = Date.now(); d.projects.unshift(obj); }
+    } else if (type==='team') {
+      const obj = { name:g('m-name'), role:g('m-role'), bio:g('m-bio') };
+      if (!obj.name) { this._toast('Name is required.'); return; }
+      if (id) { Object.assign(d.team.find(x=>x.id===id), obj); }
+      else { obj.id = Date.now(); d.team.push(obj); }
+    }
+    this._saveData(d);
+    this._renderAll();
+    closeModal();
+    this._toast('Saved ✓');
+  }
+
+  _saveSettings() {
+    const d = this._getData();
+    const g = sel => { const el=document.getElementById(sel); return el?el.value.trim():''; };
+    d.settings = { phone:g('s-phone'), email:g('s-email'), address:g('s-address'), headline:g('s-headline'), subtext:g('s-subtext') };
+    this._saveData(d);
+    this._toast('Settings saved ✓');
+  }
+
+  _toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(8px)'; }, 2400);
+  }
+}
+</script>
+</body>
+</html>

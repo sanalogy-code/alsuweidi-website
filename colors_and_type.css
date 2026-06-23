@@ -1,0 +1,349 @@
+/* =========================================================
+   ALSUWEIDI — Core Tokens (Colors + Type)
+   Source: ALSUWEIDI Brand Guidelines v1.0
+   ========================================================= */
+
+/* -------- Fonts -------- */
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-RegularItalic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-SemiBoldItalic.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Safiro";
+  src: url("fonts/Safiro-BoldItalic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ===== Brand Colors (from Brand Guidelines p.21) ===== */
+
+  /* Primary — 60% usage: backgrounds, headers, key visuals */
+  --als-red:        #c81516;   /* Pantone 485 C  */
+  --als-white:      #ffffff;   /* Pantone White 000 C */
+  --als-navy:       #000e26;   /* Pantone 296 C  */
+
+  /* Secondary — 30% usage: navy heads, dark inverse beds, neutral surfaces */
+  --als-light-grey: #f2f2f2;   /* Pantone — neutral surface */
+
+  /* Accent — 10% usage: tints, details, specific emphasis */
+  --als-red-deep:   #961011;   /* 75% red on navy ink */
+  --als-red-soft:   #e85758;   /* tinted red for hover / tints */
+  --als-navy-soft:  #1a2747;   /* tinted navy for hover / surfaces */
+
+  /* ===== Neutrals (derived, printer-safe) ===== */
+  --als-black:       #000000;
+  --als-ink:         #111722;   /* body text on white */
+  --als-ink-muted:   #4a5360;
+  --als-stone-900:   #222831;
+  --als-stone-700:   #454c57;
+  --als-stone-500:   #7a8392;
+  --als-stone-300:   #c5cbd3;
+  --als-stone-200:   #dde1e7;
+  --als-stone-100:   #eef0f3;
+  --als-stone-50:    #f6f7f9;
+  --als-off-white:   #fafaf7;   /* warm paper for hero backgrounds */
+
+  /* ===== Semantic surface tokens ===== */
+  --bg:              var(--als-white);
+  --bg-alt:          var(--als-stone-50);
+  --bg-raised:       var(--als-white);
+  --bg-inverse:      var(--als-navy);
+  --bg-brand:        var(--als-red);
+  --bg-brand-deep:   var(--als-red-deep);
+
+  --fg:              var(--als-ink);
+  --fg-strong:       var(--als-navy);
+  --fg-muted:        var(--als-ink-muted);
+  --fg-subtle:       var(--als-stone-500);
+  --fg-inverse:      var(--als-white);
+  --fg-on-brand:     var(--als-white);
+  --fg-link:         var(--als-red);
+
+  --border:          var(--als-stone-200);
+  --border-strong:   var(--als-stone-300);
+  --border-inverse:  rgba(255, 255, 255, 0.18);
+  --divider:         var(--als-stone-100);
+
+  /* Status — semantic use only (not part of brand palette) */
+  --success:         #1f7a48;
+  --success-bg:      #d6f3da;
+  --info:            #0f6d8f;
+  --info-bg:         #d3eef7;
+  --warning:         #9a6d00;
+  --warning-bg:      #fbeac1;
+  --danger:          var(--als-red);
+  --danger-bg:       #fde1e1;
+
+  /* ===== Typography ===== */
+  --font-sans:  "Safiro", "Inter", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-display: "Safiro", "Inter", ui-sans-serif, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fw-regular:   400;
+  --fw-medium:    500;    /* brand headline weight */
+  --fw-semibold:  600;
+  --fw-bold:      700;
+
+  /* Type scale — desktop. Use Safiro Medium for headlines. */
+  --fs-display:   clamp(48px, 7vw, 96px);
+  --fs-h1:        clamp(40px, 5vw, 64px);
+  --fs-h2:        clamp(32px, 3.6vw, 48px);
+  --fs-h3:        clamp(24px, 2.4vw, 32px);
+  --fs-h4:        20px;
+  --fs-h5:        16px;
+  --fs-lead:      20px;
+  --fs-body:      16px;
+  --fs-small:     14px;
+  --fs-micro:     12px;
+  --fs-eyebrow:   12px;
+
+  --lh-display:   0.98;
+  --lh-tight:     1.08;
+  --lh-heading:   1.15;
+  --lh-body:      1.55;
+  --lh-loose:     1.7;
+
+  --ls-tight:     -0.02em;
+  --ls-heading:  -0.01em;
+  --ls-body:      0em;
+  --ls-eyebrow:   0.14em;  /* ALL-CAPS eyebrow spacing */
+  --ls-wordmark:  0.02em;  /* ALSUWEIDI wordmark is all-caps, composed */
+
+  /* ===== Spacing (8pt with 4 half-step) ===== */
+  --space-0:   0;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   24px;
+  --space-6:   32px;
+  --space-7:   48px;
+  --space-8:   64px;
+  --space-9:   96px;
+  --space-10: 128px;
+
+  /* ===== Radii ===== */
+  --radius-0:   0;         /* Alsuweidi skews toward hard corners */
+  --radius-1:   2px;
+  --radius-2:   4px;
+  --radius-3:   8px;
+  --radius-4:   12px;
+  --radius-pill: 999px;
+
+  /* ===== Shadows — restrained; the brand relies on mass + color, not float ===== */
+  --shadow-xs: 0 1px 2px rgba(0, 14, 38, 0.06);
+  --shadow-sm: 0 2px 4px rgba(0, 14, 38, 0.06), 0 1px 2px rgba(0, 14, 38, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 14, 38, 0.08), 0 2px 6px rgba(0, 14, 38, 0.04);
+  --shadow-lg: 0 24px 56px rgba(0, 14, 38, 0.14), 0 4px 12px rgba(0, 14, 38, 0.06);
+  --shadow-inset: inset 0 0 0 1px rgba(0, 14, 38, 0.06);
+
+  /* ===== Motion ===== */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);     /* out-expo-ish, for brand fluidity */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:       cubic-bezier(0.5, 0, 0.75, 0);
+  --dur-fast:      120ms;
+  --dur-base:      200ms;
+  --dur-slow:      360ms;
+  --dur-slower:    600ms;
+
+  /* ===== Layout ===== */
+  --container:     1280px;
+  --container-sm:  960px;
+  --gutter:        clamp(20px, 4vw, 48px);
+
+  /* =========================================================
+     Brand-mark sizing tokens
+     Logo (horizontal/vertical lockups) and Symbol (A-mark only).
+     Sizes refer to the MARK's height; width is intrinsic to the file.
+     Use --mark-* in custom contexts; .asw-logo / .asw-symbol below
+     are the canonical utilities.
+
+     IMPORTANT — context floors (do not violate):
+       Web nav / app chrome:           --mark-sm (32px)
+       Default header / card lockup:   --mark-md (48px)
+       Slide footer / sign-off block:  --mark-lg (72px) MIN
+       Slide section header:           --mark-xl (112px)
+       Slide cover / full-bleed hero:  --mark-2xl (180px)
+       --mark-xs is for favicons ONLY. Never on slides.
+     ========================================================= */
+  --mark-xs:   20px;   /* favicons only                                   */
+  --mark-sm:   32px;   /* web nav, app chrome, list items                 */
+  --mark-md:   48px;   /* default — header lockups, card headers          */
+  --mark-lg:   72px;   /* slide footers, sidebars, sign-off blocks        */
+  --mark-xl:  112px;   /* slide section headers, cover sub-marks          */
+  --mark-2xl: 180px;   /* slide cover, full-bleed hero, splash            */
+}
+
+/* =========================================================
+   Brand-mark utilities
+   .asw-logo   — horizontal or vertical wordmark lockup (img or svg)
+   .asw-symbol — the A-mark only (img or svg)
+
+   Rules (mirrors Brand Guidelines):
+   - Sized by HEIGHT; width follows the file's intrinsic ratio.
+   - Never re-color via filters; use the correct asset for the surface.
+   - Maintain clear-space ≥ height of the symbol on all sides.
+   - Don't stretch, rotate, outline, or apply effects.
+   ========================================================= */
+.asw-logo,
+.asw-symbol {
+  display: inline-block;
+  width: auto;
+  height: var(--mark-md);          /* default */
+  vertical-align: middle;
+  /* preserve crispness when scaling raster lockups */
+  image-rendering: -webkit-optimize-contrast;
+  /* never apply filters or color shifts to brand marks */
+  filter: none;
+}
+
+/* Size modifiers — apply to either utility */
+.asw-logo.is-xs,   .asw-symbol.is-xs   { height: var(--mark-xs); }
+.asw-logo.is-sm,   .asw-symbol.is-sm   { height: var(--mark-sm); }
+.asw-logo.is-md,   .asw-symbol.is-md   { height: var(--mark-md); }
+.asw-logo.is-lg,   .asw-symbol.is-lg   { height: var(--mark-lg); }
+.asw-logo.is-xl,   .asw-symbol.is-xl   { height: var(--mark-xl); }
+.asw-logo.is-2xl,  .asw-symbol.is-2xl  { height: var(--mark-2xl); }
+
+/* Clear-space helper — wraps a mark with breathing room equal to
+   ~1× the symbol height (per Brand Guidelines). Use on hero/cover
+   placements where margins aren't otherwise enforced. */
+.asw-logo--clearspace,
+.asw-symbol--clearspace {
+  padding: 1em;        /* 1em == 1× the mark's box height */
+  box-sizing: content-box;
+}
+
+/* =========================================================
+   Semantic element defaults
+   ========================================================= */
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);   /* brand rule: Safiro Medium for headlines */
+  color: var(--fg-strong);
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1, .h1 { font-size: var(--fs-h1); line-height: var(--lh-tight);   letter-spacing: var(--ls-heading); }
+h2, .h2 { font-size: var(--fs-h2); line-height: var(--lh-tight);   letter-spacing: var(--ls-heading); }
+h3, .h3 { font-size: var(--fs-h3); line-height: var(--lh-heading); letter-spacing: var(--ls-heading); }
+h4, .h4 { font-size: var(--fs-h4); line-height: var(--lh-heading); letter-spacing: 0; font-weight: var(--fw-semibold); }
+h5, .h5 { font-size: var(--fs-h5); line-height: var(--lh-heading); letter-spacing: 0; font-weight: var(--fw-semibold); }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-tight);
+  color: var(--fg-strong);
+  text-wrap: balance;
+}
+
+p, .p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  margin: 0 0 1em 0;
+  text-wrap: pretty;
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg);
+  font-weight: var(--fw-regular);
+}
+
+small, .small { font-size: var(--fs-small); }
+.micro { font-size: var(--fs-micro); letter-spacing: 0.02em; }
+
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wordmark);
+  text-transform: uppercase;
+}
+
+code, pre, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+a { color: var(--fg-link); text-decoration: none; transition: color var(--dur-fast) var(--ease-standard); }
+a:hover { color: var(--als-red-deep); }
+
+hr { border: 0; border-top: 1px solid var(--divider); margin: var(--space-6) 0; }
+
+::selection { background: var(--als-red); color: var(--als-white); }

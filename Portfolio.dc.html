@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @font-face { font-family: "Safiro"; src: url("fonts/Safiro-Regular.otf") format("opentype"); font-weight: 400; }
+    @font-face { font-family: "Safiro"; src: url("fonts/Safiro-Medium.otf") format("opentype"); font-weight: 500; }
+    @font-face { font-family: "Safiro"; src: url("fonts/Safiro-SemiBold.otf") format("opentype"); font-weight: 600; }
+    @font-face { font-family: "Safiro"; src: url("fonts/Safiro-Bold.otf") format("opentype"); font-weight: 700; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Safiro", ui-sans-serif, sans-serif; background: #f2f2f2; color: #111722; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { text-decoration: none; }
+    img { display: block; }
+    @keyframes alsFadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .page-in { animation: alsFadeUp .7s cubic-bezier(.2,0,0,1) .1s both; }
+    [data-reveal]:not([data-revealed]) { opacity:0; transform:translateY(20px); }
+    [data-reveal] { transition: opacity .7s cubic-bezier(.2,0,0,1), transform .7s cubic-bezier(.2,0,0,1); }
+    [data-reveal][data-revealed] { opacity:1 !important; transform:none !important; }
+    [data-reveal][data-delay="1"] { transition-delay:.1s; }
+    [data-reveal][data-delay="2"] { transition-delay:.2s; }
+    .ptile { cursor:pointer; overflow:hidden; position:relative; transition:transform .3s cubic-bezier(.2,0,0,1); }
+    .ptile:hover { transform:scale(1.015); }
+    .ptile:hover .ptile-overlay { opacity:1; }
+    .ptile-overlay { position:absolute;inset:0;background:rgba(200,21,22,.08);opacity:0;transition:opacity .3s; pointer-events:none; }
+    .filter-btn { cursor:pointer; padding:7px 18px; font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; border:1px solid #ccc; background:transparent; font-family:Safiro,sans-serif; transition:all .2s; border-radius:1px; }
+    .filter-btn.active, .filter-btn:hover { background:#c81516; color:#fff; border-color:#c81516; }
+    .filter-btn:not(.active) { color:#4a5360; }
+  </style>
+  <script src="./image-slot.js"></script>
+</helmet>
+
+<!-- NAV -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:#ffffff;border-bottom:1px solid #dde1e7;">
+  <a href="Homepage.dc.html" style="display:flex;align-items:center;">
+    <img src="assets/logo-primary-red.png" alt="ALSUWEIDI" style="height:26px;width:auto;">
+  </a>
+  <div style="display:flex;align-items:center;gap:32px;">
+    <a href="Homepage.dc.html#portfolio" style="font-size:11px;font-weight:600;color:#c81516;letter-spacing:.1em;text-transform:uppercase;">Work</a>
+    <a href="Services.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">Services</a>
+    <a href="About.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">About</a>
+    <a href="News.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">News</a>
+    <a href="Contact.dc.html" style="display:inline-block;padding:9px 22px;background:#c81516;color:#fff;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap;">Get In Touch</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div style="background:#000e26;padding:160px 80px 80px;">
+  <div style="max-width:1200px;margin:0 auto;" class="page-in">
+    <p style="font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#c81516;margin-bottom:16px;">Our Work</p>
+    <h1 style="font-size:clamp(40px,5vw,70px);font-weight:500;color:#fff;line-height:1.02;letter-spacing:-.02em;max-width:640px;margin-bottom:24px;">2,500+ projects.<br>Four decades of delivery.</h1>
+    <p style="font-size:17px;color:rgba(255,255,255,.5);max-width:520px;line-height:1.75;">Commercial, residential, industrial, hospitality, education, healthcare, infrastructure — across the UAE and the wider region.</p>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div style="background:#fff;border-bottom:1px solid #dde1e7;position:sticky;top:56px;z-index:50;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 80px;display:flex;gap:8px;align-items:center;height:56px;overflow-x:auto;">
+    <button class="filter-btn active" onclick="filterProjects(event,'all')">All</button>
+    <button class="filter-btn" onclick="filterProjects(event,'commercial')">Commercial</button>
+    <button class="filter-btn" onclick="filterProjects(event,'residential')">Residential</button>
+    <button class="filter-btn" onclick="filterProjects(event,'industrial')">Industrial</button>
+    <button class="filter-btn" onclick="filterProjects(event,'hospitality')">Hospitality</button>
+    <button class="filter-btn" onclick="filterProjects(event,'education')">Education</button>
+    <button class="filter-btn" onclick="filterProjects(event,'healthcare')">Healthcare</button>
+    <button class="filter-btn" onclick="filterProjects(event,'infrastructure')">Infrastructure</button>
+  </div>
+</div>
+
+<!-- PROJECTS GRID -->
+<div style="padding:48px 80px 96px;">
+  <div id="projects-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;">
+
+    <div class="ptile" data-cat="commercial" style="background:#0d1e35;height:420px;" data-reveal>
+      <image-slot id="p1" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Commercial Tower — Abu Dhabi"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Commercial</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Al Maryah Island Office Tower</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Architecture + Structural · 2024</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="residential" style="background:#1a1a2e;height:420px;" data-reveal data-delay="1">
+      <image-slot id="p2" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Residential Community — Al Reem"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Residential</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Al Reem Island Community — Phase III</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Full MEP + Supervision · 2023</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="industrial" style="background:#1c1f2e;height:420px;" data-reveal data-delay="2">
+      <image-slot id="p3" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Industrial Hub — MODON"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Industrial</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">MODON Industrial Hub Phase II</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Infrastructure + PM · 2024</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="hospitality" style="background:#22181e;height:380px;" data-reveal>
+      <image-slot id="p4" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Grand Hyatt — Al Khaznah"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Hospitality</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Grand Hyatt Al Khaznah</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Al Ain · Architecture + Interior + MEP · 2023</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="education" style="background:#191e2e;height:380px;" data-reveal data-delay="1">
+      <image-slot id="p5" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Sorbonne University Abu Dhabi"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Education</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Sorbonne University Abu Dhabi</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Architecture + Structural + MEP · 2021</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="infrastructure" style="background:#1b2820;height:380px;" data-reveal data-delay="2">
+      <image-slot id="p6" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Masdar City Infrastructure"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Infrastructure</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Masdar City Infrastructure Network</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Infrastructure + Supervision · 2022</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="healthcare" style="background:#1a2530;height:380px;" data-reveal>
+      <image-slot id="p7" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Sheikh Khalifa Medical City"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Healthcare</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Sheikh Khalifa Medical City Expansion</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · MEP + Structural · 2023</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="commercial" style="background:#0e1c38;height:380px;" data-reveal data-delay="1">
+      <image-slot id="p8" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="ADNOC Data Centre"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Data Centre</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">ADNOC Integrated Data Centre</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Mission-Critical · 2023</p>
+      </div>
+    </div>
+
+    <div class="ptile" data-cat="residential" style="background:#1e1a2c;height:380px;" data-reveal data-delay="2">
+      <image-slot id="p9" style="position:absolute;inset:0;width:100%;height:100%;" shape="rect" fit="cover" placeholder="Yas Island Residential — Towers"></image-slot>
+      <div class="ptile-overlay"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,6,18,.92),transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:20px;left:20px;"><div style="width:18px;height:2px;background:#c81516;"></div></div>
+      <div style="position:absolute;bottom:24px;left:24px;right:16px;">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#c81516;display:block;margin-bottom:10px;">Residential</span>
+        <h3 style="font-size:18px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:7px;">Yas Island Residential Towers</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);">Abu Dhabi · Architecture + MEP + Interior · 2024</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER STRIP -->
+<div style="background:#000e26;padding:48px 80px;display:flex;justify-content:space-between;align-items:center;">
+  <div>
+    <p style="font-size:14px;font-weight:500;color:#fff;margin-bottom:6px;">Have a project in mind?</p>
+    <p style="font-size:13px;color:rgba(255,255,255,.4);">Our team is ready to collaborate.</p>
+  </div>
+  <a href="Contact.dc.html" style="padding:13px 32px;background:#c81516;color:#fff;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap;transition:background .2s;">Start a Conversation →</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.setAttribute('data-revealed','true'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+
+    window.filterProjects = (e, cat) => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      document.querySelectorAll('#projects-grid .ptile').forEach(tile => {
+        const show = cat === 'all' || tile.dataset.cat === cat;
+        tile.style.display = show ? '' : 'none';
+      });
+    };
+  }
+}
+</script>
+</body>
+</html>
