@@ -61,9 +61,9 @@
       <label class="field-label" style="color:rgba(255,255,255,.4);">Password</label>
       <input id="login-pwd" type="password" class="field-input" placeholder="Enter admin password" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);color:#fff;" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <p id="login-err" style="font-size:12px;color:#e85758;margin-bottom:14px;display:none;">Incorrect password. Try: admin</p>
+    <p id="login-err" style="font-size:12px;color:#e85758;margin-bottom:14px;display:none;">Incorrect password.</p>
     <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;padding:13px;">Sign In →</button>
-    <p style="font-size:11px;color:rgba(255,255,255,.25);margin-top:20px;text-align:center;">Demo password: <strong style="color:rgba(255,255,255,.5);">admin</strong></p>
+    <p style="font-size:11px;color:rgba(255,255,255,.25);margin-top:20px;text-align:center;">Contact administrator for password</p>
   </div>
 </div>
 
@@ -218,21 +218,24 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  componentDidMount() {
+  constructor() {
+    super();
+    this._data = { news: [], projects: [], team: [], settings: {} };
+    this._db = null;
+    this._auth = null;
+  }
+
+  async componentDidMount() {
+    // Import config
+    const { DB, AUTH } = await import('./config.js');
+    this._db = DB;
+    this._auth = AUTH;
+
     // Check session
     if (sessionStorage.getItem('als-admin-auth')) this._showApp();
 
     // Wire globals
-    window.doLogin = () => {
-      const pwd = document.getElementById('login-pwd').value;
-      const err = document.getElementById('login-err');
-      if (pwd === 'admin') {
-        sessionStorage.setItem('als-admin-auth', '1');
-        this._showApp();
-      } else {
-        err.style.display = 'block';
-      }
-    };
+    window.doLogin = () => this._handleLogin();
     window.doLogout = () => {
       sessionStorage.removeItem('als-admin-auth');
       document.getElementById('app').style.display = 'none';
@@ -253,50 +256,43 @@ class Component extends DCLogic {
     window.saveSettings = () => { this._saveSettings(); };
   }
 
-  _showApp() {
-    document.getElementById('login-screen').style.display = 'none';
-    const app = document.getElementById('app');
-    app.style.display = 'flex';
-    this._initData();
-    this._renderAll();
-  }
+  async _handleLogin() {
+    const pwd = document.getElementById('login-pwd').value;
+    const err = document.getElementById('login-err');
 
-  _initData() {
-    const defaults = {
-      news: [
-        { id:1, title:'ALSUWEIDI Unveils New Identity — Engineering Integrity, Freshly Expressed', category:'Brand Relaunch', date:'June 2026', body:'After 38 years, we mark a new era with a refreshed visual identity.', featured:true },
-        { id:2, title:'Ranked #215 — ENR Top International Design Firms 2024', category:'Recognition', date:'April 2024', body:'ALSUWEIDI earns a top-250 ranking for the second consecutive year.', featured:true },
-        { id:3, title:"UAE's Best Multidisciplinary Engineering Firm, 2025", category:'Award', date:'Feb 2025', body:'Recognised for excellence in integrated engineering delivery.', featured:true },
-        { id:4, title:'ADNOC Data Centre Reaches Practical Completion', category:'Project', date:'Dec 2023', body:'Mission-critical facility delivered on programme and specification.', featured:false },
-        { id:5, title:'ALSUWEIDI Achieves LEED Gold on Three Projects in 2024', category:'Sustainability', date:'Nov 2024', body:'Demonstrating commitment to sustainable engineering practice.', featured:false },
-        { id:6, title:'1,100+ Training Hours: Investing in UAE Engineers', category:'People', date:'Oct 2025', body:'Our 2025 training programme sets a new benchmark.', featured:false },
-      ],
-      projects: [
-        { id:1, name:'Al Maryah Island Office Tower', sector:'Commercial', location:'Abu Dhabi', year:'2024', featured:true },
-        { id:2, name:'Al Reem Island Community Phase III', sector:'Residential', location:'Abu Dhabi', year:'2023', featured:true },
-        { id:3, name:'MODON Industrial Hub Phase II', sector:'Industrial', location:'Abu Dhabi', year:'2024', featured:true },
-        { id:4, name:'Grand Hyatt Al Khaznah', sector:'Hospitality', location:'Al Ain', year:'2023', featured:true },
-        { id:5, name:'Sorbonne University Abu Dhabi', sector:'Education', location:'Abu Dhabi', year:'2021', featured:true },
-        { id:6, name:'Masdar City Infrastructure', sector:'Infrastructure', location:'Abu Dhabi', year:'2022', featured:true },
-        { id:7, name:'Sheikh Khalifa Medical City Expansion', sector:'Healthcare', location:'Abu Dhabi', year:'2023', featured:false },
-        { id:8, name:'ADNOC Integrated Data Centre', sector:'Data Centre', location:'Abu Dhabi', year:'2023', featured:false },
-        { id:9, name:'Yas Island Residential Towers', sector:'Residential', location:'Abu Dhabi', year:'2024', featured:false },
-      ],
-      team: [
-        { id:1, name:'Mohammed Al Suweidi', role:'Founder & Chairman', bio:'Co-founded ALSUWEIDI in 1988.' },
-        { id:2, name:'Ahmad Al Suweidi', role:'Co-Founder & CEO', bio:'Leads strategy and operations.' },
-        { id:3, name:'Sara Al Mansoori', role:'Technical Director', bio:'Leads the technical delivery team.' },
-        { id:4, name:'Khalid Al Rashidi', role:'Operations Director', bio:'Oversees project delivery.' },
-      ],
-      settings: { phone:'+971 2 444 0000', email:'info@alsuweidi.ae', address:'Khalidiyah, Abu Dhabi, UAE', headline:'Old and new. Locally rooted, globally capable.', subtext:'Since 1988, ALSUWEIDI has engineered the UAE\'s skyline, infrastructure, and communities.' }
-    };
-    if (!localStorage.getItem('als-cms')) {
-      localStorage.setItem('als-cms', JSON.stringify(defaults));
+    const settings = await this._db.getSettings();
+    const hash = await this._auth.hashPassword(pwd);
+
+    if (settings?.admin_password_hash && hash === settings.admin_password_hash) {
+      sessionStorage.setItem('als-admin-auth', '1');
+      this._showApp();
+    } else {
+      err.style.display = 'block';
     }
   }
 
-  _getData() { return JSON.parse(localStorage.getItem('als-cms')); }
-  _saveData(d) { localStorage.setItem('als-cms', JSON.stringify(d)); }
+  async _showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    const app = document.getElementById('app');
+    app.style.display = 'flex';
+    await this._loadAllData();
+    this._renderAll();
+  }
+
+  async _loadAllData() {
+    try {
+      this._data.news = await this._db.getNews();
+      this._data.projects = await this._db.getProjects();
+      this._data.team = await this._db.getTeam();
+      this._data.settings = await this._db.getSettings();
+    } catch (e) {
+      console.error('Error loading data:', e);
+      this._toast('Error loading data. Check console.');
+    }
+  }
+
+  _getData() { return this._data; }
+  async _saveData(d) { this._data = d; }
 
   _renderAll() {
     const d = this._getData();
@@ -381,7 +377,7 @@ class Component extends DCLogic {
     if (sp) sp.textContent = fp + ' projects featured';
   }
 
-  _toggleFeatured(type, id) {
+  async _toggleFeatured(type, id) {
     const d = this._getData();
     const arr = type === 'news' ? d.news : d.projects;
     const maxF = type === 'news' ? 3 : 6;
@@ -390,20 +386,21 @@ class Component extends DCLogic {
     const currentFeatured = arr.filter(x=>x.featured).length;
     if (!item.featured && currentFeatured >= maxF) {
       this._toast('Max ' + maxF + ' featured ' + type + '. Unfeature one first.');
-      this._renderAll();
       return;
     }
     item.featured = !item.featured;
-    this._saveData(d);
+    const dbMethod = type === 'news' ? 'updateNews' : 'updateProject';
+    await this._db[dbMethod](id, { featured: item.featured });
+    await this._loadAllData();
     this._renderAll();
     this._toast(item.featured ? 'Added to homepage ✓' : 'Removed from homepage');
   }
 
-  _deleteItem(type, id) {
+  async _deleteItem(type, id) {
     if (!confirm('Delete this item?')) return;
-    const d = this._getData();
-    d[type] = d[type].filter(x=>x.id!==id);
-    this._saveData(d);
+    const dbMethod = type === 'news' ? 'deleteNews' : type === 'projects' ? 'deleteProject' : 'deleteTeamMember';
+    await this._db[dbMethod](id);
+    await this._loadAllData();
     this._renderAll();
     this._toast('Deleted.');
   }
@@ -459,40 +456,49 @@ class Component extends DCLogic {
     document.getElementById('modal').style.display = 'flex';
   }
 
-  _saveModal() {
-    const d = this._getData();
+  async _saveModal() {
     const type = this._modalType; const id = this._modalId;
     const g = sel => { const el=document.getElementById(sel); return el?el.value.trim():''; };
     const gc = sel => { const el=document.getElementById(sel); return el?el.checked:false; };
 
-    if (type==='news') {
-      const obj = { title:g('m-title'), category:g('m-category'), date:g('m-date'), body:g('m-body'), featured:gc('m-featured') };
-      if (!obj.title) { this._toast('Title is required.'); return; }
-      if (id) { Object.assign(d.news.find(x=>x.id===id), obj); }
-      else { obj.id = Date.now(); d.news.unshift(obj); }
-    } else if (type==='project') {
-      const obj = { name:g('m-name'), sector:g('m-sector'), location:g('m-location'), year:g('m-year'), featured:gc('m-featured') };
-      if (!obj.name) { this._toast('Name is required.'); return; }
-      if (id) { Object.assign(d.projects.find(x=>x.id===id), obj); }
-      else { obj.id = Date.now(); d.projects.unshift(obj); }
-    } else if (type==='team') {
-      const obj = { name:g('m-name'), role:g('m-role'), bio:g('m-bio') };
-      if (!obj.name) { this._toast('Name is required.'); return; }
-      if (id) { Object.assign(d.team.find(x=>x.id===id), obj); }
-      else { obj.id = Date.now(); d.team.push(obj); }
+    try {
+      if (type==='news') {
+        const obj = { title:g('m-title'), category:g('m-category'), date:g('m-date'), body:g('m-body'), featured:gc('m-featured') };
+        if (!obj.title) { this._toast('Title is required.'); return; }
+        if (id) { await this._db.updateNews(id, obj); }
+        else { await this._db.addNews(obj); }
+      } else if (type==='project') {
+        const obj = { name:g('m-name'), sector:g('m-sector'), location:g('m-location'), year:parseInt(g('m-year'))||null, featured:gc('m-featured') };
+        if (!obj.name) { this._toast('Name is required.'); return; }
+        if (id) { await this._db.updateProject(id, obj); }
+        else { await this._db.addProject(obj); }
+      } else if (type==='team') {
+        const obj = { name:g('m-name'), role:g('m-role'), bio:g('m-bio') };
+        if (!obj.name) { this._toast('Name is required.'); return; }
+        if (id) { await this._db.updateTeamMember(id, obj); }
+        else { await this._db.addTeamMember(obj); }
+      }
+      await this._loadAllData();
+      this._renderAll();
+      closeModal();
+      this._toast('Saved ✓');
+    } catch (e) {
+      console.error('Save error:', e);
+      this._toast('Error saving. Check console.');
     }
-    this._saveData(d);
-    this._renderAll();
-    closeModal();
-    this._toast('Saved ✓');
   }
 
-  _saveSettings() {
-    const d = this._getData();
+  async _saveSettings() {
     const g = sel => { const el=document.getElementById(sel); return el?el.value.trim():''; };
-    d.settings = { phone:g('s-phone'), email:g('s-email'), address:g('s-address'), headline:g('s-headline'), subtext:g('s-subtext') };
-    this._saveData(d);
-    this._toast('Settings saved ✓');
+    try {
+      const settings = { phone:g('s-phone'), email:g('s-email'), address:g('s-address'), headline:g('s-headline'), subtext:g('s-subtext') };
+      await this._db.updateSettings(settings);
+      await this._loadAllData();
+      this._toast('Settings saved ✓');
+    } catch (e) {
+      console.error('Settings save error:', e);
+      this._toast('Error saving settings. Check console.');
+    }
   }
 
   _toast(msg) {
