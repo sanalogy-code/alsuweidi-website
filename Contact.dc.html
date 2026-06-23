@@ -145,9 +145,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  async componentDidMount() {
-    const { sendContactEmail } = await import('./db-helper.js');
-
+  componentDidMount() {
     document.querySelectorAll('.radio-opt').forEach(opt => {
       opt.addEventListener('click', () => {
         document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
@@ -183,26 +181,44 @@ Role: ${role}
 ${message}
       `.trim();
 
-      const result = await sendContactEmail(name, email, fullMessage);
+      try {
+        const response = await fetch('/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            message: fullMessage
+          })
+        });
 
-      if (result.success) {
-        statusEl.textContent = '✓ Message sent successfully. We'll be in touch soon.';
-        statusEl.style.color = '#5fb872';
-        statusEl.style.display = 'block';
+        const result = await response.json();
 
-        // Reset form
-        document.querySelector('form').reset();
-        document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+        if (result.success) {
+          statusEl.textContent = '✓ Message sent successfully. We'll be in touch soon.';
+          statusEl.style.color = '#5fb872';
+          statusEl.style.display = 'block';
 
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message →';
+          // Reset form
+          document.querySelector('form').reset();
+          document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
 
-        setTimeout(() => {
-          statusEl.style.display = 'none';
-          statusEl.style.color = '#c81516';
-        }, 5000);
-      } else {
-        statusEl.textContent = `Error: ${result.error || 'Failed to send message. Please try again or contact us directly.'}`;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message →';
+
+          setTimeout(() => {
+            statusEl.style.display = 'none';
+            statusEl.style.color = '#c81516';
+          }, 5000);
+        } else {
+          statusEl.textContent = `Error: ${result.error || 'Failed to send message. Please try again or contact us directly.'}`;
+          statusEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message →';
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        statusEl.textContent = 'Error: Unable to send message. Please try again.';
         statusEl.style.display = 'block';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Message →';
