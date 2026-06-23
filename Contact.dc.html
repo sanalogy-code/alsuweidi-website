@@ -182,7 +182,14 @@ ${message}
       `.trim();
 
       try {
-        const response = await fetch('/contact', {
+        // Get Supabase URL from localStorage or environment
+        const supabaseUrl = import.meta?.env?.VITE_SUPABASE_URL || localStorage.getItem('sb_url');
+        if (!supabaseUrl) {
+          throw new Error('Supabase URL not configured');
+        }
+
+        const functionUrl = `${supabaseUrl}/functions/v1/contact`;
+        const response = await fetch(functionUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
