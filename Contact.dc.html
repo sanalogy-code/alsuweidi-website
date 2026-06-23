@@ -182,13 +182,17 @@ ${message}
       `.trim();
 
       try {
-        // Get Supabase URL from localStorage or environment
-        const supabaseUrl = import.meta?.env?.VITE_SUPABASE_URL || localStorage.getItem('sb_url');
+        // Get Supabase URL from localStorage
+        const supabaseUrl = localStorage.getItem('sb_url');
         if (!supabaseUrl) {
-          throw new Error('Supabase URL not configured');
+          statusEl.textContent = 'Error: Supabase URL not configured. Set it in localStorage.';
+          statusEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message →';
+          return;
         }
 
-        const functionUrl = `${supabaseUrl}/functions/v1/contact`;
+        const functionUrl = supabaseUrl + '/functions/v1/contact';
         const response = await fetch(functionUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
