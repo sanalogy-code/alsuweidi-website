@@ -1,6 +1,0 @@
-name = "alsuweidi-website"
-type = "javascript"
-compatibility_date = "2024-06-12"
-
-[env.production]
-vars = { ENVIRONMENT = "production" }
