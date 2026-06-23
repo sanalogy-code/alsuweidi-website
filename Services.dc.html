@@ -29,20 +29,54 @@
     .svc-row:hover .svc-arrow { transform:translateX(6px); color:#c81516; }
     .svc-arrow { transition:transform .25s, color .25s; color:#bbb; font-size:22px; }
     .sector-chip { display:inline-block; padding:5px 12px; font-size:9px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; border:1px solid #dde1e7; border-radius:1px; color:#4a5360; margin:3px; }
+    .als-nl{display:flex;align-items:center;gap:32px;}
+    .als-hbg{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;flex-shrink:0;}
+    .als-hbg span{display:block;width:22px;height:1.5px;background:#000e26;transition:all .3s;}
+    .als-mn{display:none;position:fixed;top:54px;left:0;right:0;z-index:98;flex-direction:column;background:#fff;border-top:1px solid #dde1e7;box-shadow:0 8px 24px rgba(0,0,0,.1);}
+    .als-mn.open{display:flex;}
+    .als-mn a{padding:13px 24px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#4a5360;border-bottom:1px solid #f0f0f0;display:block;}
+    .als-mn .mc{background:#c81516;color:#fff!important;text-align:center;}
+    .als-svc-row-grid{display:grid;grid-template-columns:48px 240px 1fr auto;gap:32px;align-items:start;}
+    .als-sectors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+    @media(max-width:900px){
+      .als-nl{display:none!important;} .als-hbg{display:flex!important;}
+      .als-svc-row-grid{grid-template-columns:32px 1fr!important;gap:16px!important;}
+      .als-svc-row-grid .svc-desc{grid-column:1/-1!important;}
+      .als-svc-row-grid .svc-arrow{display:none!important;}
+      .als-svc-row-grid .svc-chips{grid-column:2!important;}
+      .als-sectors-grid{grid-template-columns:1fr 1fr!important;}
+      .als-spad{padding-left:24px!important;padding-right:24px!important;}
+      .als-shdr{padding:120px 24px 72px!important;}
+    }
+    @media(max-width:520px){
+      .als-svc-row-grid{grid-template-columns:1fr!important;}
+      .als-spad{padding-left:16px!important;padding-right:16px!important;}
+    }
   </style>
   <script src="./image-slot.js"></script>
 </helmet>
 
+<!-- MOBILE NAV -->
+<div id="als-mob-nav" class="als-mn">
+  <a href="Portfolio.dc.html">Work</a>
+  <a href="Services.dc.html" style="color:#c81516;">Services</a>
+  <a href="About.dc.html">About</a>
+  <a href="News.dc.html">News</a>
+  <a href="Contact.dc.html" class="mc">Get In Touch →</a>
+</div>
 <!-- NAV -->
 <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:#fff;border-bottom:1px solid #dde1e7;">
   <a href="Homepage.dc.html"><img src="assets/logo-primary-red.png" alt="ALSUWEIDI" style="height:26px;width:auto;"></a>
-  <div style="display:flex;align-items:center;gap:32px;">
+  <div class="als-nl">
     <a href="Portfolio.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">Work</a>
     <a href="Services.dc.html" style="font-size:11px;font-weight:600;color:#c81516;letter-spacing:.1em;text-transform:uppercase;">Services</a>
     <a href="About.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">About</a>
     <a href="News.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">News</a>
     <a href="Contact.dc.html" style="padding:9px 22px;background:#c81516;color:#fff;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap;">Get In Touch</a>
   </div>
+  <button class="als-hbg" onclick="document.getElementById('als-mob-nav').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HEADER -->

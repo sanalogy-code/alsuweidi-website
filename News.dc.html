@@ -28,24 +28,55 @@
     .news-card:hover { transform:translateY(-3px); box-shadow:0 8px 32px rgba(0,0,0,.08); }
     .news-card-dark { background:#000e26; cursor:pointer; transition:background .2s; }
     .news-card-dark:hover { background:#0d1b3a; }
+    .als-nl{display:flex;align-items:center;gap:32px;}
+    .als-hbg{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;flex-shrink:0;}
+    .als-hbg span{display:block;width:22px;height:1.5px;background:#000e26;transition:all .3s;}
+    .als-mn{display:none;position:fixed;top:54px;left:0;right:0;z-index:98;flex-direction:column;background:#fff;border-top:1px solid #dde1e7;box-shadow:0 8px 24px rgba(0,0,0,.1);}
+    .als-mn.open{display:flex;}
+    .als-mn a{padding:13px 24px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#4a5360;border-bottom:1px solid #f0f0f0;display:block;}
+    .als-mn .mc{background:#c81516;color:#fff!important;text-align:center;}
+    .als-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;}
+    .als-news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+    @media(max-width:900px){
+      .als-nl{display:none!important;} .als-hbg{display:flex!important;}
+      .als-feat-grid{grid-template-columns:1fr!important;}
+      .als-news-grid{grid-template-columns:1fr 1fr!important;}
+      .als-npad{padding-left:24px!important;padding-right:24px!important;}
+      .als-nhdr{padding:120px 24px 56px!important;}
+    }
+    @media(max-width:560px){
+      .als-news-grid{grid-template-columns:1fr!important;}
+      .als-npad{padding-left:16px!important;padding-right:16px!important;}
+    }
   </style>
   <script src="./image-slot.js"></script>
 </helmet>
 
+<!-- MOBILE NAV -->
+<div id="als-mob-nav" class="als-mn">
+  <a href="Portfolio.dc.html">Work</a>
+  <a href="Services.dc.html">Services</a>
+  <a href="About.dc.html">About</a>
+  <a href="News.dc.html" style="color:#c81516;">News</a>
+  <a href="Contact.dc.html" class="mc">Get In Touch →</a>
+</div>
 <!-- NAV -->
 <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:#fff;border-bottom:1px solid #dde1e7;">
   <a href="Homepage.dc.html"><img src="assets/logo-primary-red.png" alt="ALSUWEIDI" style="height:26px;width:auto;"></a>
-  <div style="display:flex;align-items:center;gap:32px;">
+  <div class="als-nl" style="display:flex;align-items:center;gap:32px;">
     <a href="Portfolio.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">Work</a>
     <a href="Services.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">Services</a>
     <a href="About.dc.html" style="font-size:11px;font-weight:500;color:#4a5360;letter-spacing:.1em;text-transform:uppercase;">About</a>
     <a href="News.dc.html" style="font-size:11px;font-weight:600;color:#c81516;letter-spacing:.1em;text-transform:uppercase;">News</a>
     <a href="Contact.dc.html" style="padding:9px 22px;background:#c81516;color:#fff;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap;">Get In Touch</a>
   </div>
+  <button class="als-hbg" onclick="document.getElementById('als-mob-nav').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HEADER -->
-<div style="background:#000e26;padding:160px 80px 80px;">
+<div class="als-nhdr" style="background:#000e26;padding:160px 80px 80px;">
   <div style="max-width:1200px;margin:0 auto;" class="page-in">
     <p style="font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#c81516;margin-bottom:16px;">News &amp; Insights</p>
     <h1 style="font-size:clamp(38px,5vw,68px);font-weight:500;color:#fff;line-height:1.03;letter-spacing:-.02em;max-width:600px;">What's happening at ALSUWEIDI.</h1>
@@ -53,9 +84,9 @@
 </div>
 
 <!-- FEATURED — rebrand story -->
-<div style="background:#c81516;padding:0 80px 0;">
+<div class="als-npad" style="background:#c81516;padding-top:0;padding-bottom:0;padding-left:80px;padding-right:80px;">
   <div style="max-width:1200px;margin:0 auto;">
-    <div data-reveal style="display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;">
+    <div data-reveal class="als-feat-grid">
       <div style="padding:64px 56px 64px 0;border-right:1px solid rgba(255,255,255,.15);">
         <span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.25);padding:4px 12px;margin-bottom:28px;">Featured · Brand Relaunch</span>
         <h2 style="font-size:clamp(24px,3vw,40px);font-weight:500;color:#fff;line-height:1.15;letter-spacing:-.01em;margin-bottom:20px;">ALSUWEIDI Unveils New Identity — Engineering Integrity, Freshly Expressed</h2>
@@ -79,8 +110,8 @@
 </div>
 
 <!-- NEWS GRID -->
-<div style="padding:64px 80px 96px;">
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;">
+<div class="als-npad" style="padding-top:64px;padding-bottom:96px;padding-left:80px;padding-right:80px;">
+  <div style="max-width:1200px;margin:0 auto;" class="als-news-grid">
 
     <div class="news-card" data-reveal>
       <image-slot id="n1" style="width:100%;height:200px;display:block;" shape="rect" fit="cover" placeholder="ENR ranking announcement"></image-slot>

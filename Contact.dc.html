@@ -28,27 +28,57 @@
     .radio-opt:hover, .radio-opt.selected { background:rgba(200,21,22,.12); border-color:rgba(200,21,22,.4); }
     .radio-opt input { accent-color:#c81516; }
     .radio-opt span { font-size:13px; color:rgba(255,255,255,.72); }
+    .als-nl{display:flex;align-items:center;gap:32px;}
+    .als-hbg{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px;flex-shrink:0;}
+    .als-hbg span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,.7);transition:all .3s;}
+    .als-mn{display:none;position:fixed;top:54px;left:0;right:0;z-index:98;flex-direction:column;background:#000e26;border-top:1px solid rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+    .als-mn.open{display:flex;}
+    .als-mn a{padding:13px 24px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.06);display:block;}
+    .als-mn .mc{background:#c81516;color:#fff!important;text-align:center;}
+    .als-contact-grid{display:grid;grid-template-columns:1fr 1fr;}
+    @media(max-width:900px){
+      .als-nl{display:none!important;} .als-hbg{display:flex!important;}
+      .als-contact-grid{grid-template-columns:1fr!important;}
+      .als-cinfo{padding:100px 24px 48px!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.06)!important;}
+      .als-cform{padding:48px 24px 64px!important;}
+    }
+    @media(max-width:520px){
+      .als-cinfo{padding:90px 16px 40px!important;}
+      .als-cform{padding:36px 16px 56px!important;}
+      .radio-opts-grid{grid-template-columns:1fr!important;}
+    }
   </style>
 </helmet>
 
+<!-- MOBILE NAV -->
+<div id="als-mob-nav" class="als-mn">
+  <a href="Portfolio.dc.html">Work</a>
+  <a href="Services.dc.html">Services</a>
+  <a href="About.dc.html">About</a>
+  <a href="News.dc.html">News</a>
+  <a href="Contact.dc.html" class="mc">Contact →</a>
+</div>
 <!-- NAV -->
 <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(0,14,38,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);">
   <a href="Homepage.dc.html" style="display:flex;align-items:center;">
     <img src="assets/logo-primary-white.png" alt="ALSUWEIDI" style="height:26px;width:auto;">
   </a>
-  <div style="display:flex;align-items:center;gap:32px;">
+  <div class="als-nl" style="display:flex;align-items:center;gap:32px;">
     <a href="Portfolio.dc.html" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">Work</a>
     <a href="Services.dc.html" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">Services</a>
     <a href="About.dc.html" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">About</a>
     <a href="News.dc.html" style="font-size:11px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;transition:color .2s;">News</a>
     <a href="Contact.dc.html" style="font-size:11px;font-weight:600;color:#c81516;letter-spacing:.1em;text-transform:uppercase;">Contact</a>
   </div>
+  <button class="als-hbg" onclick="document.getElementById('als-mob-nav').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<div style="min-height:100vh;background:#000e26;display:grid;grid-template-columns:1fr 1fr;">
+<div class="als-contact-grid" style="min-height:100vh;background:#000e26;">
 
   <!-- LEFT: info -->
-  <div style="padding:160px 64px 80px 80px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(255,255,255,.06);" class="page-in">
+  <div class="als-cinfo page-in" style="padding:160px 64px 80px 80px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid rgba(255,255,255,.06);">
     <div>
       <p style="font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#c81516;margin-bottom:20px;">Get In Touch</p>
       <h1 style="font-size:clamp(36px,4.4vw,60px);font-weight:500;color:#fff;line-height:1.04;letter-spacing:-.02em;margin-bottom:40px;">Let's build<br>something<br>remarkable.</h1>
@@ -77,7 +107,7 @@
   </div>
 
   <!-- RIGHT: form -->
-  <div style="padding:160px 80px 80px 64px;background:rgba(255,255,255,.015);" class="page-in">
+  <div class="als-cform page-in" style="padding:160px 80px 80px 64px;background:rgba(255,255,255,.015);">
     <form style="display:flex;flex-direction:column;gap:24px;" onsubmit="return false;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div>
@@ -95,7 +125,7 @@
       </div>
       <div>
         <label class="form-label">I am reaching out as a…</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="radio-opts-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <label class="radio-opt"><input type="radio" name="role" value="developer"> <span>Developer / Client</span></label>
           <label class="radio-opt"><input type="radio" name="role" value="contractor"> <span>Contractor / Partner</span></label>
           <label class="radio-opt"><input type="radio" name="role" value="talent"> <span>Prospective Talent</span></label>
