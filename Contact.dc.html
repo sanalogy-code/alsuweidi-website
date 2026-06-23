@@ -159,7 +159,8 @@ class Component extends DCLogic {
       const name = document.getElementById('cf-name').value.trim();
       const email = document.getElementById('cf-email').value.trim();
       const org = document.getElementById('cf-org').value.trim();
-      const role = document.querySelector('input[name="role"]:checked')?.value || 'unspecified';
+      const roleEl = document.querySelector('input[name="role"]:checked');
+      const role = roleEl ? roleEl.value : 'unspecified';
       const message = document.getElementById('cf-msg').value.trim();
       const statusEl = document.getElementById('form-status');
       const submitBtn = document.getElementById('submit-btn');
