@@ -143,5 +143,90 @@
 
 </div>
 </x-dc>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Radio button selection
+    document.querySelectorAll('.radio-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+
+    // Form submission
+    const form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('cf-name').value.trim();
+        const email = document.getElementById('cf-email').value.trim();
+        const org = document.getElementById('cf-org').value.trim();
+        const roleEl = document.querySelector('input[name="role"]:checked');
+        const role = roleEl ? roleEl.value : 'unspecified';
+        const message = document.getElementById('cf-msg').value.trim();
+        const statusEl = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-btn');
+
+        if (!name || !email || !message) {
+          statusEl.textContent = 'Please fill in all required fields.';
+          statusEl.style.display = 'block';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        statusEl.style.display = 'none';
+
+        const fullMessage = 'Organization: ' + (org || '(not provided)') + ' | Role: ' + role + ' | Message: ' + message;
+
+        try {
+          const supabaseUrl = localStorage.getItem('sb_url');
+          if (!supabaseUrl) {
+            statusEl.textContent = 'Error: Supabase URL not configured.';
+            statusEl.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message →';
+            return;
+          }
+
+          const functionUrl = supabaseUrl + '/functions/v1/contact';
+          const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message: fullMessage })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            statusEl.textContent = '✓ Message sent successfully!';
+            statusEl.style.color = '#5fb872';
+            statusEl.style.display = 'block';
+            form.reset();
+            document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message →';
+            setTimeout(() => {
+              statusEl.style.display = 'none';
+              statusEl.style.color = '#c81516';
+            }, 5000);
+          } else {
+            statusEl.textContent = 'Error: ' + (result.error || 'Failed to send message.');
+            statusEl.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Message →';
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          statusEl.textContent = 'Error: Unable to send message.';
+          statusEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message →';
+        }
+      });
+    }
+  });
+</script>
 </body>
 </html>
