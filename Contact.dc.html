@@ -175,12 +175,7 @@ class Component extends DCLogic {
       submitBtn.textContent = 'Sending…';
       statusEl.style.display = 'none';
 
-      const fullMessage = `
-Organization: ${org || '(not provided)'}
-Role: ${role}
-
-${message}
-      `.trim();
+      const fullMessage = 'Organization: ' + (org || '(not provided)') + '\nRole: ' + role + '\n\n' + message;
 
       try {
         // Get Supabase URL from localStorage
@@ -223,7 +218,7 @@ ${message}
             statusEl.style.color = '#c81516';
           }, 5000);
         } else {
-          statusEl.textContent = `Error: ${result.error || 'Failed to send message. Please try again or contact us directly.'}`;
+          statusEl.textContent = 'Error: ' + (result.error || 'Failed to send message. Please try again or contact us directly.');
           statusEl.style.display = 'block';
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send Message →';
