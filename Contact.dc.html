@@ -181,14 +181,8 @@
         const fullMessage = 'Organization: ' + (org || '(not provided)') + ' | Role: ' + role + ' | Message: ' + message;
 
         try {
-          const supabaseUrl = localStorage.getItem('sb_url');
-          if (!supabaseUrl) {
-            statusEl.textContent = 'Error: Supabase URL not configured.';
-            statusEl.style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Message →';
-            return;
-          }
+          const supabaseUrl = localStorage.getItem('sb_url') || 'https://oovjeenwplkqnhhqxepx.supabase.co';
+          localStorage.setItem('sb_url', supabaseUrl);
 
           const functionUrl = supabaseUrl + '/functions/v1/contact';
           const response = await fetch(functionUrl, {
