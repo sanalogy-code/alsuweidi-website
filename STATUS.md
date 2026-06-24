@@ -131,14 +131,18 @@
 ## 🔑 Key Information
 
 ### Supabase
-- **Project URL:** Get from Supabase dashboard > Settings > API
-- **Anon Key:** Also in API settings
+- **Project URL:** Get from Supabase dashboard > Settings > API (looks like `https://xxxxx.supabase.co`)
+  - This is what the contact form needs: `localStorage.setItem('sb_url', 'URL')`
+- **Anon Key:** Also in API settings (used by Supabase client on frontend)
 - **Edge Function:** `contact` — Already deployed and working
+- **Environment Variables:** `RESEND_API_KEY` is set in Edge Function Secrets
 
 ### Resend
-- **API Key:** Set as environment variable in Supabase Edge Function
+- **API Key Variable:** `RESEND_API_KEY` (set in Supabase Edge Function Secrets)
+- **Key Status:** ✅ Already configured in Supabase
 - **Sends to:** `connect@suweidi.com`
 - **From:** `noreply@alsuweidi.ae`
+- **⚠️ SECURITY:** API key is in Supabase secrets ONLY. Never commit to GitHub.
 
 ### GitHub
 - **Repo:** `https://github.com/sanalogy-code/alsuweidi-website`
