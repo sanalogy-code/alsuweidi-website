@@ -47,6 +47,55 @@
 
 ---
 
+## 🔄 Architecture Decision: Cloudflare Workers → Supabase Edge Functions
+
+### Why We Switched Away from Cloudflare Workers
+
+**Initial Approach (Didn't Work):**
+- Tried to use Cloudflare Workers to handle contact form securely
+- Created `functions/contact.js` Worker file
+- Problem: Cloudflare Pages (static site hosting) **wouldn't allow environment variables for static assets**
+- Error message: "Variables cannot be added to a Worker that only has static assets"
+- Build system conflicts: `wrangler.toml` kept triggering worker deployment instead of Pages deployment
+
+**Why Cloudflare Workers Failed:**
+- Cloudflare Pages and Cloudflare Workers have different configuration modes
+- Static sites don't get env var support in the UI
+- The configuration was fighting between two different products
+- Endless setup loops trying to satisfy both
+
+### Solution: Supabase Edge Functions
+
+**Why Supabase?**
+1. Database already in Supabase (news, projects, team, settings tables)
+2. Edge Functions are simpler than Cloudflare Workers
+3. No UI configuration conflicts
+4. Environment variables work perfectly for Edge Functions
+5. Reuses existing Supabase infrastructure
+
+**What We Built:**
+- **`supabase-edge-function-contact.ts`** — TypeScript/Deno function that:
+  - Receives POST requests from contact form
+  - Validates email and message server-side
+  - Reads `RESEND_API_KEY` from Supabase secrets (never exposed to browser)
+  - Calls Resend API to send email
+  - Returns success/error response
+
+- **Updated Contact Form** — Now calls Supabase function:
+  ```
+  Browser → Supabase Edge Function → Resend API → Email sent
+  ```
+  - Supabase URL stored in `localStorage` (set once by user)
+  - API key stays hidden on Supabase servers
+  - Much simpler than Cloudflare Workers setup
+
+**Lesson Learned:** 
+- Cloudflare Workers ≠ Cloudflare Pages Functions
+- Sometimes the "obvious" enterprise solution isn't the best fit
+- Supabase Edge Functions were simpler and required less configuration
+
+---
+
 ## 📋 Action Items (Priority Order)
 
 ### IMMEDIATE (Must Do)
