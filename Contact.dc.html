@@ -215,9 +215,11 @@
             submitBtn.textContent = 'Send Message →';
           }
         } catch (error) {
-          console.error('Error:', error);
-          statusEl.textContent = 'Error: Unable to send message.';
+          console.error('CATCH ERROR:', error);
+          console.error('Stack:', error.stack);
+          statusEl.textContent = 'Error: ' + error.message;
           statusEl.style.display = 'block';
+          statusEl.style.color = '#c81516';
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send Message →';
         }
