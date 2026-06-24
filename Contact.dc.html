@@ -185,13 +185,16 @@
           localStorage.setItem('sb_url', supabaseUrl);
 
           const functionUrl = supabaseUrl + '/functions/v1/contact';
+          console.log('Calling:', functionUrl);
           const response = await fetch(functionUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, message: fullMessage })
           });
 
+          console.log('Response status:', response.status);
           const result = await response.json();
+          console.log('Result:', result);
 
           if (result.success) {
             statusEl.textContent = '✓ Message sent successfully!';
